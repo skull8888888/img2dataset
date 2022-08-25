@@ -21,14 +21,20 @@ def download_image(row, timeout):
     """Download an image with urllib"""
     key, url = row
     img_stream = None
+        
     try:
-        request = urllib.request.Request(
-            url,
-            data=None,
-            headers={"User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:72.0) Gecko/20100101 Firefox/72.0"},
-        )
-        with urllib.request.urlopen(request, timeout=timeout) as r:
-            img_stream = io.BytesIO(r.read())
+        if "http" not in url:
+            # Read a binary file from disk
+            with open(fname, "rb") as stream:
+                img_stream = stream.read()
+        else:
+            request = urllib.request.Request(
+                url,
+                data=None,
+                headers={"User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:72.0) Gecko/20100101 Firefox/72.0"},
+            )
+            with urllib.request.urlopen(request, timeout=timeout) as r:
+                img_stream = io.BytesIO(r.read())
         return key, img_stream, None
     except Exception as err:  # pylint: disable=broad-except
         if img_stream is not None:

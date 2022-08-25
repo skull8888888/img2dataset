@@ -25,7 +25,7 @@ def download_image(row, timeout):
     try:
         if "http" not in url:
             # Read a binary file from disk
-            with open(fname, "rb") as stream:
+            with open(url, "rb") as stream:
                 img_stream = stream.read()
         else:
             request = urllib.request.Request(
